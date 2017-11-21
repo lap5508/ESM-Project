@@ -58,7 +58,7 @@ d3.sankey = function() {
 
         function link(d) {
             var x0 = d.source.x + d.source.dx,
-                x1 = d.target.x,
+                x1 = d.target.x ,
                 xi = d3.interpolateNumber(x0, x1),
                 x2 = xi(curvature),
                 x3 = xi(1 - curvature),
@@ -110,7 +110,7 @@ d3.sankey = function() {
     // Nodes are assigned the maximum breadth of incoming neighbors plus one;
     // nodes with no incoming links are assigned breadth zero, while
     // nodes with no outgoing links are assigned the maximum breadth.
-    function computeNodeBreadths2() {
+    function computeNodeBreadths() {
         var remainingNodes = nodes,
             nextNodes,
             x = 0;
@@ -133,34 +133,9 @@ d3.sankey = function() {
             ++x;
         }
 
-
-
         //
         moveSinksRight(x);
         scaleNodeBreadths((width - nodeWidth) / (x - 1));
-    }
-
-    function computeNodeBreadths() {
-        var remainingNodes = nodes,
-            nextNodes,
-            x = 0;
-
-        while (remainingNodes.length) {
-            nextNodes = [];
-            remainingNodes.forEach(function(node) {
-                node.x = x;
-                node.dx = nodeWidth;
-                node.sourceLinks.forEach(function(link) {
-                    nextNodes.push(link.target);
-                });
-            });
-            remainingNodes = nextNodes;
-            ++x;
-        }
-
-        //
-        moveSinksRight(x);
-        scaleNodeBreadths((size[0] - nodeWidth) / (x - 1));
     }
 
     function moveSourcesRight() {
@@ -181,7 +156,10 @@ d3.sankey = function() {
 
     function scaleNodeBreadths(kx) {
         nodes.forEach(function(node) {
-            node.x *= kx;
+            // node.x *= kx;
+            //the + 250 is how you change the x placement of the nodes
+            node.x *= kx + (width - 200);
+            console.log("kx: " + kx);
         });
     }
 
@@ -329,228 +307,415 @@ d3.sankey = function() {
 
 
 
-// function getData() {
-//     return {
-//         "nodes": [
-//             {"node": 0,"name":"Promote awareness of IT Services"},
-//             {"node": 1,"name":"Provide end-user training and knowledge"},
-//             {"node": 2,"name":"Ensure Access to services"},
-//             {"node": 3,"name":"Provide end-user help and support"},
-//             {"node": 4,"name":"Contribute to effective service designs & roll outs"},
-//             {"node": 5,"name":"Help ensure high quality of services provided"},
-//             {"node": 6,"name":"Provide data and insights to IT & the business"},
-//             {"node": 7,"name":"Project 1", "xPos": 1},
-//             {"node": 8,"name":"Project 2", "xPos": 1},
-//             {"node": 9,"name":"Project 3", "xPos": 1},
-//             {"node": 10,"name":"Project 4", "xPos": 1},
-//             {"node": 11,"name":"Project 5", "xPos": 1},
-//             {"node": 12,"name":"Project 6", "xPos": 1},
-//             {"node": 13,"name":"Project 7", "xPos": 1},
-//             {"node": 14,"name":"Project 8", "xPos": 1},
-//             {"node": 15,"name":"Project 9", "xPos": 1},
-//             {"node": 16,"name":"Project 10", "xPos": 1},
-//             {"node": 17,"name":"Project 11", "xPos": 1},
-//             {"node": 18,"name":"Project 12", "xPos": 1},
-//             {"node": 19,"name":"Project 13", "xPos": 1},
-//             {"node": 20,"name":"Project 14", "xPos": 1},
-//             {"node": 21,"name":"Incidents can be linked to projects to ensure we solve the right problems"},
-//             {"node": 22,"name":"End-users can identify and locate the services and support they need"},
-//             {"node": 23,"name":"End-users are more likely to adopt & utilize IT services"},
-//             {"node": 24,"name":"IT is more reliable"},
-//             {"node": 25,"name":"End-users know how to leverage technology to improve performance"},
-//             {"node": 26,"name":"Reduced duplication of effort & use of shadow IT across the org"},
-//             {"node": 27,"name":"Greater Organizational capacity for innovation"},
-//             {"node": 28,"name":"End-users get help quickly so they can get back to work"},
-//             {"node": 29,"name":"Cost-savings"},
-//             {"node": 30,"name":"Users have a positive experience with IT services throughout the service lifecycle"},
-//             {"node": 31,"name":"Higher quality of teaching, learning, and research"}
-//         ],
-//         "links": [
-//             {"source":0,
-//                 "target":14,
-//                 "value":6},
-//             {"source":0,
-//                 "target":22,
-//                 "value":6},
-//             {"source":0,
-//                 "target":23,
-//                 "value":1},
-//             {"source":1,
-//                 "target":8,
-//                 "value":2},
-//             {"source":1,
-//                 "target":23,
-//                 "value":1},
-//             {"source":1,
-//                 "target":25,
-//                 "value":6},
-//             {"source":1,
-//                 "target":31,
-//                 "value":1},
-//             {"source":2,
-//                 "target":23,
-//                 "value":1},
-//             {"source":2,
-//                 "target":31,
-//                 "value":1},
-//             {"source":2,
-//                 "target":18,
-//                 "value":6},
-//             {"source":3,
-//                 "target":21,
-//                 "value":6},
-//             {"source":3,
-//                 "target":23,
-//                 "value":1},
-//             {"source":3,
-//                 "target":28,
-//                 "value":6},
-//             {"source":3,
-//                 "target":17,
-//                 "value":6},
-//             {"source":3,
-//                 "target":30,
-//                 "value":3},
-//             {"source":4,
-//                 "target":7,
-//                 "value":6},
-//             {"source":4,
-//                 "target":8,
-//                 "value":2},
-//             {"source":4,
-//                 "target":9,
-//                 "value":6},
-//             {"source":4,
-//                 "target":10,
-//                 "value":6},
-//             {"source":4,
-//                 "target":11,
-//                 "value":6},
-//             {"source":4,
-//                 "value":6},
-//             {"source":4,
-//                 "target":13,
-//                 "value":6},
-//             {"source":4,
-//                 "target":26,
-//                 "value":6},
-//             {"source":4,
-//                 "target":31,
-//                 "value":1},
-//             {"source":4,
-//                 "target":30,
-//                 "value":3},
-//             {"source":5,
-//                 "target":27,
-//                 "value":6},
-//             {"source":5,
-//                 "target":31,
-//                 "value":1},
-//             {"source":5,
-//                 "target":29,
-//                 "value":6},
-//             {"source":5,
-//                 "target":19,
-//                 "value":5},
-//             {"source":5,
-//                 "target":15,
-//                 "value":6},
-//             {"source":5,
-//                 "target":8,
-//                 "value":2},
-//             {"source":6,
-//                 "target":16,
-//                 "value":6},
-//             {"source":6,
-//                 "target":20,
-//                 "value":6},
-//             {"source":6,
-//                 "target":24,
-//                 "value":6},
-//             {"source":6,
-//                 "target":31,
-//                 "value":1}
-//         ]};
-// }
-//
-// var margin = {top: 1, right: 1, bottom: 6, left: 1},
-//     width = 960 - margin.left - margin.right,
-//     height = 500 - margin.top - margin.bottom;
-//
-// var formatNumber = d3.format(",.0f"),
-//     format = function(d) { return formatNumber(d) + " TWh"; },
-//     color = d3.scale.category20();
-//
-// var svg = d3.select("#chart").append("svg")
-//     .attr("width", width + margin.left + margin.right)
-//     .attr("height", height + margin.top + margin.bottom)
-//     .append("g")
-//     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-//
-// var sankey = d3.sankey()
-//     .nodeWidth(15)
-//     .nodePadding(10)
-//     .size([width, height]);
-//
-// var path = sankey.link();
-//
-// var renderSankey = function(energy) {
-//
-//
-//     window.width = 500;
-//     sankey
-//         .nodes(energy.nodes)
-//         .links(energy.links)
-//         .layout(32);
-//
-//     var link = svg.append("g").selectAll(".link")
-//         .data(energy.links)
-//         .enter().append("path")
-//         .attr("class", "link")
-//         .attr("d", path)
-//         .style("stroke-width", function(d) { return Math.max(1, d.dy); })
-//         .sort(function(a, b) { return b.dy - a.dy; });
-//
-//     link.append("title")
-//         .text(function(d) { return d.source.name + " → " + d.target.name + "\n" + format(d.value); });
-//
-//     var node = svg.append("g").selectAll(".node")
-//         .data(energy.nodes)
-//         .enter().append("g")
-//         .attr("class", "node")
-//         .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
-//         .call(d3.behavior.drag()
-//             .origin(function(d) { return d; })
-//             .on("dragstart", function() { this.parentNode.appendChild(this); })
-//             .on("drag", dragmove));
-//
-//     node.append("rect")
-//         .attr("height", function(d) { return d.dy; })
-//         .attr("width", sankey.nodeWidth())
-//         .style("fill", function(d) { return d.color = color(d.name.replace(/ .*/, "")); })
-//         .style("stroke", function(d) { return d3.rgb(d.color).darker(2); })
-//         .append("title")
-//         .text(function(d) { return d.name + "\n" + format(d.value); });
-//
-//     node.append("text")
-//         .attr("x", -6)
-//         .attr("y", function(d) { return d.dy / 2; })
-//         .attr("dy", ".35em")
-//         .attr("text-anchor", "end")
-//         .attr("transform", null)
-//         .text(function(d) { return d.name; })
-//         .filter(function(d) { return d.x < width / 2; })
-//         .attr("x", 6 + sankey.nodeWidth())
-//         .attr("text-anchor", "start");
-//
-//     function dragmove(d) {
-//         d3.select(this).attr("transform", "translate(" + d.x + "," + (d.y = Math.max(0, Math.min(height - d.dy, d3.event.y))) + ")");
-//         sankey.relayout();
-//         link.attr("d", path);
-//     }
-// }
+function getData() {
+    return {
+        "nodes": [{
+            "node": 0,
+            "name": "Promote awareness of IT Services",
+            "color": "#58cb84",
+            "xPos": 1
+        }, {
+            "node": 1,
+            "name": "Provide end-user training and knowledge",
+            "color": "#58cb84",
+            "xPos": 1
+        }, {
+            "node": 2,
+            "name": "Ensure Access to services",
+            "color": "#58cb84",
+            "xPos": 1
+        }, {
+            "node": 3,
+            "name": "Provide end-user help and support",
+            "color": "#58cb84",
+            "xPos": 1
+        }, {
+            "node": 4,
+            "name":"Contribute to effective service designs & roll outs",
+            "color": "#58cb84",
+            "xPos": 1
+        }, {
+            "node": 5,
+            "name": "Help ensure high quality of services provided",
+            "color": "#58cb84",
+            "xPos": 1
+        }, {
+            "node": 6,
+            "name": "Provide data and insights to IT & the business",
+            "color": "#58cb84",
+            "xPos": 1
+        }, {
+            "node": 7,
+            "color": "#82b2cb",
+            "name": "Project 1"
+        }, {
+            "node": 8,
+            "color": "#82b2cb",
+            "name": "Project 2"
+        }, {
+            "node": 9,
+            "color": "#82b2cb",
+            "name": "Project 3"
+        }, {
+            "node": 10,
+            "color": "#82b2cb",
+            "name": "Project 4"
+        }, {
+            "node": 11,
+            "color": "#82b2cb",
+            "name":"Project 5"
+        }, {
+            "node": 12,
+            "color": "#82b2cb",
+            "name": "Project 6"
+        }, {
+            "node": 13,
+            "color": "#82b2cb",
+            "name": "Project 7"
+        },  {
+            "node": 14,
+            "color": "#82b2cb",
+            "name": "Project 8"
+        }, {
+            "node": 15,
+            "color": "#82b2cb",
+            "name": "Project 9"
+        }, {
+            "node": 16,
+            "color": "#82b2cb",
+            "name": "Project 10"
+        }, {
+            "node": 17,
+            "color": "#82b2cb",
+            "name": "Project 11"
+        }, {
+            "node": 18,
+            "color": "#82b2cb",
+            "name":"Project 12"
+        }, {
+            "node": 19,
+            "color": "#82b2cb",
+            "name": "Project 13"
+        }, {
+            "node": 20,
+            "color": "#82b2cb",
+            "name": "Project 14"
+        }, {
+            "node": 21,
+            "color": "#a69e00",
+            "name": "Incidents can be linked to projects to ensure we solve the right problems"
+        }, {
+            "node": 22,
+            "color": "#a69e00",
+            "name": "End-users can identify and locate the services and support they need"
+        }, {
+            "node": 23,
+            "color": "#a69e00",
+            "name": "End-users are more likely to adopt & utilize IT services"
+        }, {
+            "node": 24,
+            "color": "#a69e00",
+            "name": "End-users know how to leverage technology to improve performance"
+        }, {
+            "node": 25,
+            "color": "#a69e00",
+            "name": "Reduced duplication of effort & use of shadow IT across the org"
+        }, {
+            "node": 26,
+            "color": "#a69e00",
+            "name": "Greater Organizational capacity for innovation"
+        }, {
+            "node": 27,
+            "color": "#a69e00",
+            "name": "End-users get help quickly so they can get back to work"
+        }, {
+            "node": 28,
+            "color": "#a69e00",
+            "name": "Cost-savings"
+        }, {
+            "node": 29,
+            "color": "#a69e00",
+            "name": "Users have a positive experience with IT services throughout the service lifecycle"
+        }, {
+            "node": 30,
+            "color": "#a69e00",
+            "name": "Higher quality of teaching, learning, and research"
+        }, {
+            "node": 31,
+            "color": "#a69e00",
+            "name": "IT is more reliable"
+        }],
+        "links": [{
+            "source": 21,
+            "color": "#a69e00",
+            "target": 1,
+            "value": 6
+        }, {
+            "source": 22,
+            "color": "#a69e00",
+            "target": 0,
+            "value": 6
+        }, {
+            "source": 23,
+            "color": "#a69e00",
+            "target": 1,
+            "value": 1.5
+        }, {
+            "source": 23,
+            "color": "#a69e00",
+            "target": 0,
+            "value": 1.5
+        }, {
+            "source": 23,
+            "color": "#a69e00",
+            "target": 2,
+            "value": 1.5
+        }, {
+            "source": 23,
+            "color": "#a69e00",
+            "target": 3,
+            "value": 1.5
+        }, {
+            "source": 24,
+            "color": "#a69e00",
+            "target": 6,
+            "value": 6
+        }, {
+            "source": 25,
+            "color": "#a69e00",
+            "target": 1,
+            "value": 6
+        }, {
+            "source": 26,
+            "color": "#a69e00",
+            "target": 4,
+            "value": 2
+        }, {
+            "source": 27,
+            "color": "#a69e00",
+            "target": 5,
+            "value": 6
+        }, {
+            "source": 28,
+            "color": "#a69e00",
+            "target": 3,
+            "value": 6
+        }, {
+            "source": 29,
+            "color": "#a69e00",
+            "target": 5,
+            "value": 6
+        }, {
+            "source": 30,
+            "color": "#a69e00",
+            "target": 3,
+            "value": 3
+        }, {
+            "source": 30,
+            "color": "#a69e00",
+            "target": 4,
+            "value": 2
+        }, {
+            "source": 31,
+            "color": "#a69e00",
+            "target": 1,
+            "value": 1.5
+        }, {
+            "source": 31,
+            "color": "#a69e00",
+            "target": 2,
+            "value": 1.5
+        }, {
+            "source": 31,
+            "color": "#a69e00",
+            "target": 4,
+            "value": 2
+        }, {
+            "source": 31,
+            "color": "#a69e00",
+            "target": 5,
+            "value": 1.5
+        }, {
+            "source": 0,
+            "color": "#58cb84",
+            "target": 14,
+            "value": 6
+        }, {
+            "source": 1,
+            "color": "#58cb84",
+            "target": 8,
+            "value": 6
+        }, {
+            "source": 2,
+            "color": "#58cb84",
+            "target": 18,
+            "value": 6
+        }, {
+            "source": 3,
+            "color": "#58cb84",
+            "target": 17,
+            "value": 6
+        }, {
+            "source": 4,
+            "color": "#58cb84",
+            "target": 7,
+            "value": 6
+        }, {
+            "source": 4,
+            "color": "#58cb84",
+            "target": 9,
+            "value": 6
+        }, {
+            "source": 4,
+            "color": "#58cb84",
+            "target": 10,
+            "value": 6
+        }, {
+            "source": 4,
+            "color": "#58cb84",
+            "target": 11,
+            "value": 6
+        }, {
+            "source": 4,
+            "color": "#58cb84",
+            "target": 12,
+            "value": 6
+        }, {
+            "source": 4,
+            "color": "#58cb84",
+            "target": 13,
+            "value": 6
+        }, {
+            "source": 5,
+            "color": "#58cb84",
+            "target": 19,
+            "value": 6
+        }, {
+            "source": 6,
+            "color": "#58cb84",
+            "target": 16,
+            "value": 6
+        }, {
+            "source": 6,
+            "color": "#58cb84",
+            "target": 20,
+            "value": 6
+        }, {
+            "source": 6,
+            "color": "#58cb84",
+            "target": 15,
+            "value": 6
+        }]};
+}
 
-//renderSankey(getData());
+var margin = {top: 10, right: 10, bottom: 10, left: 550},
+    width = 1200 - margin.left - margin.right,
+    height = 740 - margin.top - margin.bottom;
+
+var formatNumber = d3.format(",.0f"),
+    format = function(d) { return formatNumber(d) + " TWh"; },
+    color = d3.scale.category20();
+
+var svg = d3.select("#chart").append("svg")
+    .attr("width", 2400)
+    .attr("height", 1800)
+    .attr("class", "graph-svg-component")
+    .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+var sankey = d3.sankey()
+    .nodeWidth(15)
+    .nodePadding(10)
+    .size([width, height]);
+
+var path = sankey.link();
+
+var renderSankey = function(energy) {
+
+    function computeIcon(d){
+        var iconnum = Math.floor(Math.random() * (4 - 1)) + 1;
+        console.log(iconnum);
+        if(iconnum === 1){return '\uf023'; }
+        else if(iconnum === 2){return '\uf129'; }
+        else if(iconnum === 3){return '\uf127'; }
+        else{return '\uf115'; }
+    }
+
+    var iconkey = computeIcon(getData());
+     console.log(iconkey);
+
+    window.width = 500;
+    sankey
+        .nodes(energy.nodes)
+        .links(energy.links)
+        .layout(32);
+
+    var link = svg.append("g").selectAll(".link")
+        .data(energy.links)
+        .enter().append("path")
+        .attr("class", "link")
+        .attr("d", path)
+        //Math.max(1, d.dy) --> place this in the return function below to replace the width of the links to resize automatically
+        .style("stroke-width", function(d) { return Math.max(1, d.dy); })
+        .style("stroke", function(d){return d.color;})//add this to return the color of link
+        //.style("distance", 400)
+        .sort(function(a, b) { return b.dy - a.dy; });
+
+
+    link.append("title")
+        .text(function(d) { return d.source.name + " → " + d.target.name + "\n" + format(d.value); });
+
+    var node = svg.append("g").selectAll(".node")
+        .data(energy.nodes)
+        .enter().append("g")
+        .attr("class", "node")
+        .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
+        .call(d3.behavior.drag()
+            .origin(function(d) { return d; })
+            .on("dragstart", function() { this.parentNode.appendChild(this); })
+            .on("drag", dragmove));
+
+    node.append("rect")
+        .attr("height", function(d) { return d.dy; })
+        .attr("width", sankey.nodeWidth())
+        .style("fill", function(d) { return d.color; })
+        .style("stroke", function(d) { return d3.rgb(d.color).darker(2); })
+        .append("title")
+        .text(function(d) { return d.name + "\n" + format(d.value); });
+
+    node.append("rect")
+        .attr("height", function(d) { return d.dy; })
+        .attr("width", sankey.nodeWidth())
+        .style("fill", function(d) { return d.color;}) // modified node color
+        .style("stroke", function(d) {
+            return d3.rgb(d.color).darker(2); })
+        .append("title")
+        .text(function(d) {
+            return d.name + "\n" + format(d.value); });
+
+    node.append("text")
+        .attr("x", -6)
+        .attr("y", function(d) { return d.dy / 2; })
+        .attr("dy", ".35em")
+        .attr("text-anchor", "end")
+        .attr("transform", null)
+        .attr('font-family', 'FontAwesome')
+        .attr("fill", "white")
+        .attr('font-size', function(d) { return d.size+'em'} ).attr('font-size', function(d) { return d.size+'em'} )
+        .text(function(d) {return d.name + "  " + computeIcon(getData());})
+        .filter(function(d) { return d.x < width / -2; })
+        .attr("x", 6 + sankey.nodeWidth())
+        .attr("text-anchor", "start");
+
+
+    function dragmove(d) {
+        d3.select(this).attr("transform", "translate(" + d.x + "," + (d.y = Math.max(0, Math.min(height - d.dy, d3.event.y))) + ")");
+        sankey.relayout();
+        link.attr("d", path);
+    }
+}
+
+renderSankey(getData());
 
 
 
